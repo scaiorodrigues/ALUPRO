@@ -1,5 +1,3 @@
-// ─── Tipos principais do ALUPRO ───────────────────────────────────────────────
-
 export interface Company {
   id: string
   name: string
@@ -20,16 +18,15 @@ export interface Profile {
   company_id: string
   line_id: string | null
   name: string
-  weight_per_meter: number        // kg/m
+  weight_per_meter: number
   application: string | null
-  drawing_url: string | null      // URL SVG/PNG no Supabase Storage
+  drawing_url: string | null
   technical_pdf: string | null
   tags: string[]
   popular: boolean
   description: string | null
   created_at: string
   updated_at: string
-  // joins opcionais
   company?: Company
   line?: ProductLine
 }
@@ -37,28 +34,16 @@ export interface Profile {
 export interface SimilarProfile {
   profile_id: string
   similar_id: string
-  score: number                   // 0–1
+  score: number
   similar?: Profile
 }
-
-export interface SearchHistoryItem {
-  id: string
-  user_id: string
-  query: string
-  searched_at: string
-}
-
-// ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export interface AppUser {
   id: string
   email: string
   is_admin: boolean
   approved: boolean
-  created_at: string
 }
-
-// ─── Forms ────────────────────────────────────────────────────────────────────
 
 export interface ProfileFormData {
   name: string
