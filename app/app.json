@@ -4,10 +4,10 @@
     "slug": "alupro",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#090c0f"
     },
@@ -25,15 +25,12 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font",
       [
         "expo-image-picker",
-        { "photosPermission": "Permitir acesso para fazer upload de desenhos de perfis." }
+        { "photosPermission": "Permitir acesso para upload de desenhos de perfis." }
       ]
     ],
     "scheme": "alupro",
-    "experiments": {
-      "typedRoutes": true
-    }
+    "experiments": { "typedRoutes": true }
   }
 }
