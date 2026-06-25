@@ -4,96 +4,57 @@ import { router } from 'expo-router'
 import { getPopularProfiles, getProfiles } from '../../lib/queries/profiles'
 import { getCompanies } from '../../lib/queries/companies'
 import { useSearchStore } from '../../store/useSearchStore'
-
-function SectionTitle({ title }: { title: string }) {
-  return <Text style={s.secTitle}>{title}</Text>
-}
-
-function ChipRow({ items, onPress }: { items: string[], onPress: (v: string) => void }) {
-  return (
-    <View style={s.chipRow}>
-      {items.map((item) => (
-        <TouchableOpacity key={item} style={s.chip} onPress={() => onPress(item)}>
-          <Text style={s.chipText}>{item}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  )
-}
-
-function ProfileRow({ profile, onPress }: { profile: any, onPress: () => void }) {
-  return (
-    <TouchableOpacity style={s.profileRow} onPress={onPress}>
-      <View style={s.profileThumb}>
-        <Text style={{ color: '#FF6B1A', fontSize: 18 }}>
-          {profile.name?.charAt(0) ?? '?'}
-        </Text>
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={s.profileName}>{profile.name}</Text>
-        <Text style={s.profileMeta}>{profile.company?.name ?? '—'} · {profile.line?.name ?? '—'}</Text>
-        <Text style={s.profileWeight}>{profile.weight_per_meter} kg/m</Text>
-      </View>
-      {profile.popular && <View style={s.popularBadge}><Text style={s.popularText}>POPULAR</Text></View>}
-      <Text style={{ color:'#5e6e88' }}>›</Text>
-    </TouchableOpacity>
-  )
-}
+import { ProfileCard } from '../../components/ProfileCard'
+import { colors, radius } from '../../constants/theme'
 
 export default function HomeScreen() {
   const { history, setQuery, addHistory } = useSearchStore()
 
-  const { data: popular = [], isLoading: loadingPop } = useQuery({
-    queryKey: ['profiles', 'popular'],
-    queryFn: () => getPopularProfiles(6),
-  })
+  const { data: popular = [], isLoading } = useQuery({ queryKey:['profiles','popular'], queryFn:() => getPopularProfiles(6) })
+  const { data: companies = [] }          = useQuery({ queryKey:['companies'],           queryFn: getCompanies })
 
-  const { data: companies = [] } = useQuery({
-    queryKey: ['companies'],
-    queryFn: getCompanies,
-  })
-
-  const handleSearch = (q: string) => {
-    setQuery(q); addHistory(q)
-    router.push('/(app)/search')
-  }
-
-  const handleProfile = (id: string) => router.push(`/(app)/profile/${id}`)
+  const goSearch = (q: string) => { setQuery(q); addHistory(q); router.push('/(app)/search') }
+  const goProfile = (id: string) => router.push({ pathname:'/(app)/profile/[id]', params:{ id } })
 
   return (
-    <ScrollView style={s.root} contentContainerStyle={{ paddingBottom: 32 }}>
+    <ScrollView style={s.root} contentContainerStyle={{ paddingBottom:32 }}>
       <View style={s.sec}>
         <Text style={s.greeting}>Olá, Engenheiro 👋</Text>
-        <Text style={s.sub}>Explore o catálogo de perfis</Text>
+        <Text style={s.sub}>Explore o catálogo de perfis de alumínio</Text>
       </View>
 
       {history.length > 0 && (
         <View style={s.sec}>
-          <SectionTitle title="Buscas Recentes" />
-          <ChipRow items={history} onPress={handleSearch} />
+          <Text style={s.secTitle}>Buscas Recentes</Text>
+          <View style={s.chips}>
+            {history.map(h => (
+              <TouchableOpacity key={h} style={s.chip} onPress={() => goSearch(h)}>
+                <Text style={s.chipTxt}>{h}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       )}
 
       <View style={s.sec}>
-        <SectionTitle title="Empresas Atualizadas" />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {companies.slice(0, 6).map((c) => (
-            <TouchableOpacity key={c.id} style={s.companyBadge}>
-              <View style={s.companyLogo}>
-                <Text style={{ color:'#FF6B1A', fontWeight:'700' }}>{c.name.slice(0,2)}</Text>
-              </View>
+        <Text style={s.secTitle}>Empresas com Catálogo Atualizado</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal:-4 }}>
+          {companies.map((c, i) => (
+            <View key={c.id} style={s.company}>
+              <View style={s.companyLogo}><Text style={s.companyInitial}>{c.name.slice(0,2)}</Text></View>
               <Text style={s.companyName}>{c.name}</Text>
-            </TouchableOpacity>
+              {i < 2 && <View style={s.dot}/>}
+            </View>
           ))}
         </ScrollView>
       </View>
 
       <View style={s.sec}>
-        <SectionTitle title="Mais Populares" />
-        {loadingPop
-          ? <ActivityIndicator color="#FF6B1A" />
-          : popular.map((p) => (
-              <ProfileRow key={p.id} profile={p} onPress={() => handleProfile(p.id)} />
+        <Text style={s.secTitle}>Mais Populares</Text>
+        {isLoading
+          ? <ActivityIndicator color={colors.orange}/>
+          : popular.map(p => (
+              <ProfileCard key={p.id} profile={p} onPress={() => goProfile(p.id)}/>
             ))
         }
       </View>
@@ -102,22 +63,17 @@ export default function HomeScreen() {
 }
 
 const s = StyleSheet.create({
-  root:         { flex:1, backgroundColor:'#090c0f' },
-  sec:          { padding:16, paddingTop:18 },
-  secTitle:     { fontSize:10, fontWeight:'700', letterSpacing:3, color:'#5e6e88', marginBottom:11, textTransform:'uppercase' },
-  greeting:     { fontSize:22, fontWeight:'700', color:'#dde4ef' },
-  sub:          { fontSize:13, color:'#5e6e88', marginTop:4 },
-  chipRow:      { flexDirection:'row', flexWrap:'wrap', gap:8 },
-  chip:         { backgroundColor:'#181c22', borderWidth:1, borderColor:'#262d38', borderRadius:20, paddingHorizontal:13, paddingVertical:6 },
-  chipText:     { fontSize:12, color:'#8496b0', fontWeight:'600' },
-  companyBadge: { backgroundColor:'#181c22', borderWidth:1, borderColor:'#262d38', borderRadius:12, padding:12, alignItems:'center', marginRight:10, minWidth:76 },
-  companyLogo:  { width:36, height:36, backgroundColor:'#1e232b', borderRadius:8, alignItems:'center', justifyContent:'center', marginBottom:4 },
-  companyName:  { fontSize:10, color:'#8496b0', fontWeight:'600' },
-  profileRow:   { flexDirection:'row', alignItems:'center', gap:12, backgroundColor:'#181c22', borderWidth:1, borderColor:'#262d38', borderRadius:14, padding:13, marginBottom:9 },
-  profileThumb: { width:50, height:50, backgroundColor:'#1e232b', borderRadius:11, alignItems:'center', justifyContent:'center', borderWidth:1, borderColor:'#262d38' },
-  profileName:  { fontSize:16, fontWeight:'700', color:'#dde4ef' },
-  profileMeta:  { fontSize:12, color:'#5e6e88', marginTop:1 },
-  profileWeight:{ fontSize:12, color:'#FF6B1A', fontWeight:'600', marginTop:3 },
-  popularBadge: { backgroundColor:'rgba(39,194,130,.14)', borderWidth:1, borderColor:'rgba(39,194,130,.3)', borderRadius:6, paddingHorizontal:8, paddingVertical:2 },
-  popularText:  { fontSize:9, fontWeight:'700', color:'#27c282', letterSpacing:1 },
+  root:          { flex:1, backgroundColor:colors.bg },
+  sec:           { padding:15, paddingTop:18 },
+  secTitle:      { fontSize:10, fontWeight:'700', letterSpacing:3, color:colors.muted, marginBottom:12, textTransform:'uppercase' },
+  greeting:      { fontSize:22, fontWeight:'800', color:colors.text },
+  sub:           { fontSize:13, color:colors.muted, marginTop:4 },
+  chips:         { flexDirection:'row', flexWrap:'wrap', gap:8 },
+  chip:          { backgroundColor:colors.s2, borderWidth:1, borderColor:colors.border, borderRadius:20, paddingHorizontal:14, paddingVertical:7 },
+  chipTxt:       { fontSize:12, color:colors.muted2, fontWeight:'600' },
+  company:       { backgroundColor:colors.s2, borderWidth:1, borderColor:colors.border, borderRadius:12, padding:12, alignItems:'center', marginHorizontal:5, minWidth:80 },
+  companyLogo:   { width:38, height:38, backgroundColor:colors.s3, borderRadius:9, alignItems:'center', justifyContent:'center', marginBottom:5 },
+  companyInitial:{ color:colors.orange, fontWeight:'800', fontSize:13 },
+  companyName:   { fontSize:10, color:colors.muted2, fontWeight:'600' },
+  dot:           { width:6, height:6, backgroundColor:colors.ok, borderRadius:3, marginTop:4 },
 })
