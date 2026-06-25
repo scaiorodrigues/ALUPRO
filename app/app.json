@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "ALUPRO",
+    "slug": "alupro",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#090c0f"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.scaiorodrigues.alupro"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#090c0f"
+      },
+      "package": "com.scaiorodrigues.alupro",
+      "versionCode": 1
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-image-picker",
+        { "photosPermission": "Permitir acesso para fazer upload de desenhos de perfis." }
+      ]
+    ],
+    "scheme": "alupro",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
