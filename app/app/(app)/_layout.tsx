@@ -1,82 +1,74 @@
-import { Redirect, Tabs } from 'expo-router'
-import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native'
+import { useEffect } from 'react'
+import { Tabs, Redirect } from 'expo-router'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 import { useAuthStore } from '../../store/useAuthStore'
 import { useSearchStore } from '../../store/useSearchStore'
 import { router } from 'expo-router'
+import { colors } from '../../constants/theme'
 
-function SearchBar() {
+function TopBar() {
   const { query, setQuery } = useSearchStore()
   return (
-    <View style={s.searchWrap}>
-      <Text style={s.searchIcon}>🔍</Text>
-      <TextInput
-        style={s.searchInput}
-        placeholder="Buscar perfil, empresa, linha..."
-        placeholderTextColor="#5e6e88"
-        value={query}
-        onChangeText={(t) => { setQuery(t); router.push('/(app)/search') }}
-        returnKeyType="search"
-      />
-      {query.length > 0 && (
-        <TouchableOpacity onPress={() => setQuery('')}>
-          <Text style={s.clearBtn}>✕</Text>
-        </TouchableOpacity>
-      )}
+    <View style={s.topbar}>
+      <Text style={s.brand}>ALUPRO</Text>
+      <View style={s.searchWrap}>
+        <Text style={s.searchIc}>🔍</Text>
+        <TextInput
+          style={s.searchInput}
+          placeholder="Buscar perfil, empresa, linha..."
+          placeholderTextColor={colors.muted}
+          value={query}
+          onChangeText={t => { setQuery(t); router.push('/(app)/search') }}
+          returnKeyType="search"
+        />
+        {query.length > 0 && (
+          <TouchableOpacity onPress={() => setQuery('')}>
+            <Text style={s.clearBtn}>✕</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   )
 }
 
 export default function AppLayout() {
   const { session, loading, isAdmin } = useAuthStore()
-  if (!loading && !session) return <Redirect href="/(auth)/login" />
+  if (!loading && !session) return <Redirect href="/(auth)/login"/>
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#090c0f' }}>
-      {/* Status bar area */}
-      <View style={s.topBar}>
-        <Text style={s.brand}>ALUPRO</Text>
-        <SearchBar />
-      </View>
-
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarStyle: s.tabBar,
-          tabBarActiveTintColor:   '#FF6B1A',
-          tabBarInactiveTintColor: '#5e6e88',
-          tabBarLabelStyle:        s.tabLabel,
-        }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{ title: 'Home', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏠</Text> }}
-        />
-        <Tabs.Screen
-          name="search"
-          options={{ title: 'Buscar', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🔍</Text> }}
-        />
-        <Tabs.Screen
-          name="favorites"
-          options={{ title: 'Favoritos', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>❤️</Text> }}
-        />
+    <View style={{ flex:1, backgroundColor: colors.bg }}>
+      <TopBar/>
+      <Tabs screenOptions={{
+        headerShown: false,
+        tabBarStyle: s.tabBar,
+        tabBarActiveTintColor:   colors.orange,
+        tabBarInactiveTintColor: colors.muted,
+        tabBarLabelStyle:        s.tabLabel,
+      }}>
+        <Tabs.Screen name="index"
+          options={{ title:'Home', tabBarIcon:({color}) => <Text style={{color, fontSize:20}}>🏠</Text> }}/>
+        <Tabs.Screen name="search"
+          options={{ title:'Buscar', tabBarIcon:({color}) => <Text style={{color, fontSize:20}}>🔍</Text> }}/>
+        <Tabs.Screen name="favorites"
+          options={{ title:'Favoritos', tabBarIcon:({color}) => <Text style={{color, fontSize:20}}>❤️</Text> }}/>
         {isAdmin && (
-          <Tabs.Screen
-            name="admin"
-            options={{ title: 'Admin', tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🛡</Text> }}
-          />
+          <Tabs.Screen name="admin"
+            options={{ title:'Admin', tabBarIcon:({color}) => <Text style={{color, fontSize:20}}>🛡</Text> }}/>
         )}
+        {/* Esconde rotas de detalhe da tab bar */}
+        <Tabs.Screen name="profile" options={{ href: null }}/>
       </Tabs>
     </View>
   )
 }
 
 const s = StyleSheet.create({
-  topBar:     { backgroundColor:'#111418', borderBottomWidth:1, borderBottomColor:'#262d38', paddingTop:48, paddingHorizontal:14, paddingBottom:8 },
-  brand:      { color:'#FF6B1A', fontWeight:'700', fontSize:13, letterSpacing:4, marginBottom:8 },
-  searchWrap: { flexDirection:'row', alignItems:'center', backgroundColor:'#181c22', borderWidth:1, borderColor:'#262d38', borderRadius:13, paddingHorizontal:12, paddingVertical:9, gap:8 },
-  searchInput:{ flex:1, color:'#dde4ef', fontSize:14 },
-  searchIcon: { fontSize:15 },
-  clearBtn:   { color:'#5e6e88', fontSize:18, paddingHorizontal:4 },
-  tabBar:     { backgroundColor:'#111418', borderTopColor:'#262d38', borderTopWidth:1, height:62, paddingBottom:8 },
-  tabLabel:   { fontSize:9, fontWeight:'700', letterSpacing:1, textTransform:'uppercase' },
+  topbar:      { backgroundColor:colors.s1, borderBottomWidth:1, borderBottomColor:colors.border, paddingTop:52, paddingHorizontal:14, paddingBottom:10 },
+  brand:       { color:colors.orange, fontWeight:'800', fontSize:13, letterSpacing:5, marginBottom:9 },
+  searchWrap:  { flexDirection:'row', alignItems:'center', backgroundColor:colors.s2, borderWidth:1, borderColor:colors.border, borderRadius:13, paddingHorizontal:12, paddingVertical:10, gap:9 },
+  searchInput: { flex:1, color:colors.text, fontSize:14 },
+  searchIc:    { fontSize:15 },
+  clearBtn:    { color:colors.muted, fontSize:18, paddingHorizontal:2 },
+  tabBar:      { backgroundColor:colors.s1, borderTopColor:colors.border, borderTopWidth:1, height:64, paddingBottom:10 },
+  tabLabel:    { fontSize:9, fontWeight:'700', letterSpacing:1.5, textTransform:'uppercase' },
 })
