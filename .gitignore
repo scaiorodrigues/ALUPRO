@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Ambiente
+.env
+*.env.local
+
+# DXF gerados localmente
+*.dxf
+*.dwg
+
+# Node / React Native
+node_modules/
+.expo/
+dist/
+build/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
