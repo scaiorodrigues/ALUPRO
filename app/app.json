@@ -21,16 +21,31 @@
         "backgroundColor": "#090c0f"
       },
       "package": "com.scaiorodrigues.alupro",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "plugins": [
       "expo-router",
       [
         "expo-image-picker",
-        { "photosPermission": "Permitir acesso para upload de desenhos de perfis." }
+        {
+          "photosPermission": "Permitir acesso à galeria para upload de desenhos de perfis."
+        }
       ]
     ],
     "scheme": "alupro",
-    "experiments": { "typedRoutes": true }
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "supabaseUrl": "https://zpgonnhpokdxdljhflph.supabase.co",
+      "supabaseAnonKey": "sb_publishable_yTDVBh7i8CsYFl8hN0S5KQ_CTFPPAKS",
+      "eas": {
+        "projectId": "SERÁ_PREENCHIDO_APÓS_EAS_INIT"
+      }
+    }
   }
 }
