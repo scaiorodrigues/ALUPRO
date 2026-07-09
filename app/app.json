@@ -44,8 +44,9 @@
       "supabaseUrl": "https://zpgonnhpokdxdljhflph.supabase.co",
       "supabaseAnonKey": "sb_publishable_yTDVBh7i8CsYFl8hN0S5KQ_CTFPPAKS",
       "eas": {
-        "projectId": "SERÁ_PREENCHIDO_APÓS_EAS_INIT"
+        "projectId": "PREENCHER_APÓS_eas_init"
       }
-    }
+    },
+    "owner": "scaiorodrigues"
   }
 }
