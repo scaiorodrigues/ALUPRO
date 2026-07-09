@@ -207,14 +207,14 @@ ON CONFLICT (name) DO NOTHING;
 
 -- Linhas padrão para Brasal (adapte para sua realidade)
 INSERT INTO product_lines (company_id, name, description)
-SELECT c.id, l.name, l.desc FROM companies c,
+SELECT c.id, l.name, l.description FROM companies c,
   (VALUES
     ('Solar',           'Perfis para montagem de painéis solares fotovoltaicos'),
     ('Industrial',      'Perfis para estruturas e automação industrial'),
     ('Arquitetônica',   'Perfis para fachadas, esquadrias e acabamentos'),
     ('Construção Civil','Perfis para janelas, portas e divisórias'),
     ('Automotiva',      'Perfis para carroçarias e estruturas veiculares')
-  ) AS l(name, desc)
+  ) AS l(name, description)
 WHERE c.name = 'Brasal'
 ON CONFLICT DO NOTHING;
 
