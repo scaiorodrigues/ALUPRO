@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-// Lê das variáveis de ambiente Expo (funciona em dev e no build)
 const SUPABASE_URL =
   process.env.EXPO_PUBLIC_SUPABASE_URL ??
   'https://zpgonnhpokdxdljhflph.supabase.co'
@@ -11,8 +11,9 @@ const SUPABASE_KEY =
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
+    storage: AsyncStorage,
     autoRefreshToken: true,
-    persistSession:   true,
+    persistSession: true,
     detectSessionInUrl: false,
   },
 })
