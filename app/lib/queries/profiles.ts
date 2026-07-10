@@ -45,10 +45,36 @@ export async function searchProfiles(query: string): Promise<Profile[]> {
       p.tags.some(t => t.toLowerCase().includes(q))
     )
   }
+  // Tenta full-text search primeiro (usa search_vector com pesos A/B/C)
+  const { data: fts, error: ftsErr } = await supabase
+    .from('profiles')
+    .select('*, company:companies(*), line:product_lines(*)')
+    .textSearch('search_vector', query, { type: 'websearch', config: 'portuguese' })
+    .eq('active', true)
+    .order('name')
+    .limit(40)
+
+  if (!ftsErr && fts && fts.length > 0) return fts
+
+  // Fallback: ilike para termos curtos ou sem match no FTS
   const { data, error } = await supabase
-    .from('profiles').select('*, company:companies(*)')
-    .or(`name.ilike.%${query}%,application.ilike.%${query}%`)
-    .order('name').limit(40)
+    .from('profiles')
+    .select('*, company:companies(*), line:product_lines(*)')
+    .or(`name.ilike.%${query}%,application.ilike.%${query}%,code.ilike.%${query}%`)
+    .eq('active', true)
+    .order('name')
+    .limit(40)
+  if (error) throw error
+  return data ?? []
+}
+
+export async function getProfilesByCompany(companyId: string): Promise<Profile[]> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*, company:companies(*), line:product_lines(*)')
+    .eq('company_id', companyId)
+    .eq('active', true)
+    .order('name')
   if (error) throw error
   return data ?? []
 }

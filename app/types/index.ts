@@ -18,10 +18,15 @@ export interface Profile {
   company_id: string
   line_id: string | null
   name: string
+  code: string | null
   weight_per_meter: number
+  area_mm2: number | null
   application: string | null
   drawing_url: string | null
+  dxf_url: string | null
   technical_pdf: string | null
+  alloy: string | null
+  surface: string | null
   tags: string[]
   popular: boolean
   description: string | null
@@ -47,10 +52,14 @@ export interface AppUser {
 
 export interface ProfileFormData {
   name: string
+  code: string
   company_id: string
   line_id: string
   application: string
   weight_per_meter: number
+  area_mm2: number | null
+  alloy: string
+  surface: string
   tags: string
   description: string
   popular: boolean
