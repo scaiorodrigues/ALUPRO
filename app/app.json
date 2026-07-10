@@ -21,12 +21,13 @@
         "backgroundColor": "#090c0f"
       },
       "package": "com.scaiorodrigues.alupro",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
       ]
     },
+    "newArchEnabled": true,
     "plugins": [
       "expo-router",
       [
