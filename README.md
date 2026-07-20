@@ -2,6 +2,22 @@
 
 Aplicativo mobile B2B para busca, visualização e comparação de perfis de alumínio industriais.
 
+## 📱 Baixar o APK (Android)
+
+**[→ Instalar última build](https://expo.dev/accounts/scaiorodrigues/projects/alupro/builds/dabaa5cd-a3f5-4e91-b62b-35f5ab3579b5)**
+
+Abra o link pelo navegador do celular Android e toque em *Install*. Será necessário
+permitir a instalação de apps de fontes desconhecidas.
+
+| | |
+|---|---|
+| Build | `dabaa5cd-a3f5-4e91-b62b-35f5ab3579b5` |
+| Perfil | `preview` (APK, distribuição interna) |
+| Inclui | Ícone ALUPRO "A" + tela de diagnóstico de erro |
+
+> Builds anteriores ficam listadas em
+> [expo.dev/accounts/scaiorodrigues/projects/alupro/builds](https://expo.dev/accounts/scaiorodrigues/projects/alupro/builds)
+
 ## Stack
 - **Mobile:** React Native + Expo + Expo Router
 - **Backend:** Supabase (PostgreSQL + Auth + Storage)
